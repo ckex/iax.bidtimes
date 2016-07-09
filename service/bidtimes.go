@@ -37,7 +37,7 @@ func Start() {
 		}
 	}
 
-	for _, value := range group {
+	for key, value := range group {
 
 		count, useTimes := caclGroup(value)
 
@@ -73,13 +73,26 @@ func Start() {
 		}
 
 		if index55 > 0 && index85 > 0 && index99 > 0 {
-			iaxResponseTimes := models.IaxResponseTimes{USERID: int64(value[0].dspID), TIME: value[0].theTime, FIFTYTH: index55, EIGHTYFIVETH: index85, NINETYNINETH: index99, DATETIMECREATE: time.Now(), DATETIMEMODIFIED: time.Now()}
-			id, err := models.AddIaxResponseTimes(&iaxResponseTimes)
+			var id int64
+			if key.isTest {
+				iaxTestResponseTimes := models.IaxTestResponseTimes{USERID: int64(value[0].dspID), TIME: value[0].theTime, FIFTYTH: index55, EIGHTYFIVETH: index85, NINETYNINETH: index99, DATETIMECREATE: time.Now(), DATETIMEMODIFIED: time.Now()}
+				id, err = models.AddIaxTestResponseTimes(&iaxTestResponseTimes)
+			} else {
+				iaxResponseTimes := models.IaxResponseTimes{USERID: int64(value[0].dspID), TIME: value[0].theTime, FIFTYTH: index55, EIGHTYFIVETH: index85, NINETYNINETH: index99, DATETIMECREATE: time.Now(), DATETIMEMODIFIED: time.Now()}
+				id, err = models.AddIaxResponseTimes(&iaxResponseTimes)
+				// if err != nil {
+				// 	fmt.Println("insert iax_response_times error ", err)
+				// 	continue
+				// }
+				// fmt.Println("insert iax_response_times success ,id=", id)
+			}
+
 			if err != nil {
-				fmt.Println("insert iax_response_times error ", err)
+				fmt.Println("insert ", key.isTest, " table  error ", err)
 				continue
 			}
-			fmt.Println("insert iax_response_times success ,id=", id)
+			fmt.Println("insert ", key.isTest, " table success ,id=", id)
+
 		}
 
 		delkey(value)
@@ -192,7 +205,8 @@ func filterKeys(keys []string) (vaildKey []bidtimes) {
 			fmt.Println(fields[3], useTimes)
 			continue
 		}
-		bidtime := bidtimes{groupKey{dspID, theTime}, value, useTimes, times}
+		isTest := strings.HasSuffix(fields[0], "-TEST")
+		bidtime := bidtimes{groupKey{dspID, isTest, theTime}, value, useTimes, times}
 		result = append(result, bidtime)
 	}
 	return result
@@ -200,6 +214,7 @@ func filterKeys(keys []string) (vaildKey []bidtimes) {
 
 type groupKey struct {
 	dspID   int
+	isTest  bool
 	theTime time.Time
 }
 
