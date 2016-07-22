@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/beego/redigo/redis"
+	"github.com/astaxie/beego"
 )
 
 var (
@@ -15,7 +16,8 @@ var (
 func init() {
 	//	config.NewConfig("yaml")
 	// 从配置文件获取redis的ip以及db
-	REDIS_HOST = "127.0.0.1:6379"
+	REDIS_HOST := beego.AppConfig.String("redisHost")
+	//REDIS_HOST = "127.0.0.1:6379"
 	//REDIS_HOST = "192.168.118.126:6379"
 	REDIS_DB = 0
 	// 建立连接池
