@@ -7,10 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"time"
-
 	"iax.bidtimes/dao"
 	"iax.bidtimes/models"
+	"time"
 )
 
 func Start() {
@@ -175,7 +174,7 @@ func filterKeys(keys []string) (vaildKey []bidtimes) {
 	for _, value := range keys {
 
 		fields := strings.Split(value, "[iax]")
-		theTime, err := time.ParseInLocation("2006-01-02-15-04-05", fields[2]+"-00", time.Local)
+		theTime, err := time.ParseInLocation("2006-01-02-15-04-05", fields[2]+"-00", time.UTC)
 		if err != nil {
 			fmt.Println("time parse error", fields[2], err)
 			continue
@@ -184,7 +183,7 @@ func filterKeys(keys []string) (vaildKey []bidtimes) {
 		stopTime := theTime.Add(time.Minute * 5)
 
 		// if stoptime < now  ok  else skip .
-		if stopTime.After(time.Now()) {
+		if stopTime.After(time.Now().UTC()) {
 			// thetime > stoptime
 			// logger.Warn("skip stoptime>now,stop=%s(%v) %v %v", stopTime.Format("2006-01-02 15:04:05"), stopTime.Unix(), theTime, time.Now())
 			continue

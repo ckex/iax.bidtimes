@@ -12,7 +12,7 @@ func init() {
 	// 参数2        driverName
 	// 参数3        对应的链接字符串
 	mysqlUrl := beego.AppConfig.String("mysqlUrl")
-	//mysqlUrl := "root:123456@tcp(localhost:3306)/iax?charset=utf8&loc=Local"
+	//mysqlUrl := "root:123456@tcp(localhost:3306)/iax?charset=utf8&loc=UTC"
 	orm.RegisterDataBase("default", "mysql", mysqlUrl)
 	orm.SetMaxIdleConns("default", 10)
 	orm.SetMaxOpenConns("default", 50)

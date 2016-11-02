@@ -17,6 +17,7 @@ func init() {
 	//	config.NewConfig("yaml")
 	// 从配置文件获取redis的ip以及db
 	REDIS_HOST := beego.AppConfig.String("redisHost")
+	pwd := beego.AppConfig.String("redispwd")
 	//REDIS_HOST = "127.0.0.1:6379"
 	//REDIS_HOST = "192.168.118.126:6379"
 	REDIS_DB = 0
@@ -31,6 +32,7 @@ func init() {
 			if err != nil {
 				return nil, err
 			}
+			c.Do("AUTH",pwd)
 			return c, nil
 		},
 	}
